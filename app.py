@@ -51,6 +51,18 @@ def search_close_list(close_list_values, html_text, similarity_cutoff):
                 similar_values.append(f'<span style="color:red;">{value}</span>')
                 highlighted_close_list.append(f'<span style="color:red;">{value}</span>')
                 highlighted_html_text = highlighted_html_text.replace(similar_value, f'<span style="color:red;">{similar_value}</span>')
+            else:
+                # Check for hyphen-separated values
+                value_parts = value.split('-')
+                if len(value_parts) > 1:
+                    for part in value_parts:
+                        similar_values_found = difflib.get_close_matches(part, html_text.split(), n=1, cutoff=similarity_cutoff)
+                        if similar_values_found:
+                            similar_value = similar_values_found[0]
+                            similar_values.append(f'<span style="color:red;">{value}</span>')
+                            highlighted_close_list.append(f'<span style="color:red;">{value}</span>')
+                            highlighted_html_text = highlighted_html_text.replace(similar_value, f'<span style="color:red;">{similar_value}</span>')
+                            break
 
     return '|'.join(exact_matches), '|'.join(similar_values), highlighted_html_text, '|'.join(highlighted_close_list)
 
