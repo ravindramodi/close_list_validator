@@ -1,38 +1,107 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>HTML to Text Converter</title>
+    <title>Multiselect Operation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 100%;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        textarea, input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        button {
+            display: block;
+            margin: 0 auto;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .result-section {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .result-section > div {
+            flex-basis: 48%;
+            margin-bottom: 20px;
+        }
+        .result-section h2 {
+            margin-bottom: 10px;
+        }
+        .result-section p {
+            margin: 0;
+            font-size: 16px;
+        }
+    </style>
 </head>
 <body>
-    <h1>HTML to Text Converter</h1>
-    <form method="POST" action="{{ url_for('index') }}">
-        <label for="html_text">HTML Text:</label>
-        <textarea name="html_text" id="html_text" rows="5"></textarea>
-        <br>
-        <label for="close_list">Close List:</label>
-        <input type="text" name="close_list" id="close_list">
-        <br>
-        <button type="submit">Convert</button>
-    </form>
-    {% if normal_text %}
-    <h2>Converted Text:</h2>
-    <p>{{ normal_text }}</p>
-    {% endif %}
-    {% if highlighted_html_text %}
-    <h2>Highlighted HTML Text:</h2>
-    <p>{{ highlighted_html_text|safe }}</p>
-    {% endif %}
-    {% if close_list_values %}
-    <h2>Close List Values:</h2>
-    <p>{{ close_list_values|safe }}</p>
-    {% endif %}
-    {% if exact_matches %}
-    <h2>Exact Matches:</h2>
-    <p>{{ exact_matches|safe }}</p>
-    {% endif %}
-    {% if similar_values %}
-    <h2>Similar Values:</h2>
-    <p>{{ similar_values|safe }}</p>
-    {% endif %}
+    <div class="container">
+        <h1>Multiselect Operation</h1>
+        <form method="POST" action="{{ url_for('index') }}">
+            <div class="form-group">
+                <label for="html_text">HTML Text:</label>
+                <textarea name="html_text" id="html_text" rows="5">{% if normal_text %}{{ normal_text }}{% endif %}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="close_list">Close List:</label>
+                <input type="text" name="close_list" id="close_list" value="{% if close_list_values %}{{ close_list_values }}{% endif %}">
+            </div>
+            <button type="submit">Convert</button>
+        </form>
+        {% if normal_text or highlighted_html_text or close_list_values or exact_matches or similar_values %}
+        <div class="result-section">
+            <div>
+                <h2>Converted Text</h2>
+                <p>{{ normal_text }}</p>
+            </div>
+            <div>
+                <h2>Highlighted HTML Text</h2>
+                <p>{{ highlighted_html_text|safe }}</p>
+            </div>
+            <div>
+                <h2>Close List Values</h2>
+                <p>{{ close_list_values|safe }}</p>
+            </div>
+            <div>
+                <h2>Exact Matches</h2>
+                <p>{{ exact_matches|safe }}</p>
+            </div>
+            <div>
+                <h2>Similar Values</h2>
+                <p>{{ similar_values|safe }}</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
 </body>
 </html>
