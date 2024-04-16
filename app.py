@@ -16,13 +16,14 @@ def index():
         close_list_values = process_close_list(close_list)
 
         # Search for exact matches and similar values in the HTML text
-        exact_matches, similar_values = search_close_list(close_list_values, html_text)
+        exact_matches, similar_values, highlighted_html_text, highlighted_close_list = search_close_list(close_list_values, html_text)
 
         return render_template('index.html',
                                normal_text=normal_text,
-                               close_list_values=close_list_values,
+                               close_list_values=highlighted_close_list,
                                exact_matches=exact_matches,
-                               similar_values=similar_values)
+                               similar_values=similar_values,
+                               highlighted_html_text=highlighted_html_text)
 
     return render_template('index.html')
 
@@ -35,16 +36,23 @@ def process_close_list(close_list):
 def search_close_list(close_list_values, html_text):
     exact_matches = []
     similar_values = []
+    highlighted_html_text = html_text
+    highlighted_close_list = []
 
     for value in close_list_values:
         if value in html_text:
-            exact_matches.append(value)
+            exact_matches.append(f'<span style="color:green;">{value}</span>')
+            highlighted_close_list.append(f'<span style="color:green;">{value}</span>')
+            highlighted_html_text = highlighted_html_text.replace(value, f'<span style="color:green;">{value}</span>')
         else:
             similar_values_found = difflib.get_close_matches(value, html_text.split(), n=1)
             if similar_values_found:
-                similar_values.append(value)
+                similar_value = similar_values_found[0]
+                similar_values.append(f'<span style="color:red;">{value}</span>')
+                highlighted_close_list.append(f'<span style="color:red;">{value}</span>')
+                highlighted_html_text = highlighted_html_text.replace(similar_value, f'<span style="color:red;">{similar_value}</span>')
 
-    return '|'.join(exact_matches), '|'.join(similar_values)
+    return '|'.join(exact_matches), '|'.join(similar_values), highlighted_html_text, '|'.join(highlighted_close_list)
 
 if __name__ == '__main__':
     app.run(debug=True)
