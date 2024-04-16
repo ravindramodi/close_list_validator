@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request
+import difflib
 
 app = Flask(__name__)
 
@@ -39,10 +40,9 @@ def search_close_list(close_list_values, html_text):
         if value in html_text:
             exact_matches.append(value)
         else:
-            for word in html_text.split():
-                if value.lower() in word.lower():
-                    similar_values.append(value)
-                    break
+            similar_values_found = difflib.get_close_matches(value, html_text.split(), n=1)
+            if similar_values_found:
+                similar_values.append(value)
 
     return '|'.join(exact_matches), '|'.join(similar_values)
 
