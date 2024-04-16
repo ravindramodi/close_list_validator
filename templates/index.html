@@ -20,11 +20,15 @@
     {% endif %}
     {% if close_list_values %}
     <h2>Close List Values:</h2>
-    <ul>
-        {% for value in close_list_values %}
-        <li>{{ value }}</li>
-        {% endfor %}
-    </ul>
+    <p>{{ ', '.join(close_list_values) }}</p>
+    {% endif %}
+    {% if exact_matches %}
+    <h2>Exact Matches:</h2>
+    <p>{{ exact_matches }}</p>
+    {% endif %}
+    {% if similar_values %}
+    <h2>Similar Values:</h2>
+    <p>{{ similar_values }}</p>
     {% endif %}
 </body>
 </html>

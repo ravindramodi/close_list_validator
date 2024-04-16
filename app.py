@@ -14,17 +14,37 @@ def index():
         # Process the "Close List" input
         close_list_values = process_close_list(close_list)
 
-        return render_template('index.html', normal_text=normal_text, close_list_values=close_list_values)
+        # Search for exact matches and similar values in the HTML text
+        exact_matches, similar_values = search_close_list(close_list_values, html_text)
+
+        return render_template('index.html',
+                               normal_text=normal_text,
+                               close_list_values=close_list_values,
+                               exact_matches=exact_matches,
+                               similar_values=similar_values)
 
     return render_template('index.html')
 
 def html_to_text(html_text):
-    # Your HTML to text conversion logic here
     return html_text.replace('<', '&lt;').replace('>', '&gt;')
 
 def process_close_list(close_list):
-    # Your logic to process the "Close List" input here
-    return close_list.split(',')
+    return [item.strip() for item in close_list.split(',')]
+
+def search_close_list(close_list_values, html_text):
+    exact_matches = []
+    similar_values = []
+
+    for value in close_list_values:
+        if value in html_text:
+            exact_matches.append(value)
+        else:
+            for word in html_text.split():
+                if value.lower() in word.lower():
+                    similar_values.append(value)
+                    break
+
+    return '|'.join(exact_matches), '|'.join(similar_values)
 
 if __name__ == '__main__':
     app.run(debug=True)
